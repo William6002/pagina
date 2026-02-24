@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — TechSolv Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+
+<div class="admin-layout">
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <a href="dashboard.html" class="logo" style="display:block;">TECH<span>SOLV</span></a>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="active"><span>📊</span> Dashboard</a>
+      <a href="mensagens.html"><span>✉️</span> Mensagens</a>
+      <a href="orcamentos.html"><span>📋</span> Orçamentos</a>
+      <div class="sidebar-divider"></div>
+      <a href="produtos-admin.html"><span>📦</span> Produtos</a>
+      <a href="conteudo.html"><span>✏️</span> Conteúdo</a>
+      <div class="sidebar-divider"></div>
+      <a href="index.html" target="_blank"><span>🌐</span> Ver Site</a>
+      <a href="#" onclick="logout()"><span>🔒</span> Sair</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+    <div class="admin-header">
+      <div>
+        <h1>Dashboard</h1>
+        <p>Bem-vindo ao painel de controle da TechSolv.</p>
+      </div>
+      <div style="text-align:right;font-size:.875rem;color:var(--text-muted);" id="userInfo"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row" id="statsRow"></div>
+
+    <!-- Tabs -->
+    <div class="admin-tabs" id="tabsContainer">
+      <button class="tab-btn active" data-tab="tab-msg">✉️ Mensagens Recentes</button>
+      <button class="tab-btn" data-tab="tab-orc">📋 Orçamentos Recentes</button>
+    </div>
+
+    <div class="tab-content active" id="tab-msg">
+      <div class="table-wrap">
+        <table class="data-table" id="tableMensagens">
+          <thead><tr>
+            <th>Data/Hora</th><th>Nome</th><th>E-mail</th><th>Assunto</th><th>Status</th><th>IP</th>
+          </tr></thead>
+          <tbody id="tbodyMsg"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-orc">
+      <div class="table-wrap">
+        <table class="data-table" id="tableOrcamentos">
+          <thead><tr>
+            <th>Data/Hora</th><th>Empresa</th><th>E-mail</th><th>Produtos</th><th>Total Est.</th><th>Status</th>
+          </tr></thead>
+          <tbody id="tbodyOrc"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="main.js"></script>
+<script src="produtos.js"></script>
+<script>
+  const user = requireAuth();
+  document.getElementById('userInfo').innerHTML = `Olá, <strong>${user.nome}</strong><br><span style="font-size:.78rem;">${user.role}</span>`;
+
+  // Dados mockados para demo
+  function seedDemo() {
+    if (DB.get('mensagens').length === 0) {
+      DB.push('mensagens', { id: 1, tipo:'contato', nome:'Carlos Menezes', empresa:'Metalúrgica Boa Vista', email:'carlos@metbv.com.br', assunto:'Informações sobre produtos', mensagem:'Gostaria de saber sobre prazos...', ip:'189.45.123.10', datetime:'2025-06-10T09:32:00', lido:true });
+      DB.push('mensagens', { id: 2, tipo:'contato', nome:'Fernanda Alves', empresa:'Indústria FGA', email:'fernanda@fga.com', assunto:'Suporte técnico', mensagem:'Problema com inversor...', ip:'200.100.50.22', datetime:'2025-06-11T14:10:00', lido:false });
+    }
+    if (DB.get('orcamentos').length === 0) {
+      DB.push('orcamentos', { id: 1, nome:'Roberto Lima', empresa:'Construmaq Ltda', email:'roberto@construmaq.com', telefone:'(11)98765-4321', produtos:[{nome:'Painel de Controle CLP',qty:2,subtotal:6400},{nome:'Sensor Indutivo',qty:5,subtotal:1400}], total:7800, status:'pendente', ip:'177.22.88.44', datetime:'2025-06-12T08:45:00', lido:false });
+      DB.push('orcamentos', { id: 2, nome:'Ana Beatriz Costa', empresa:'AB Automação', email:'ana@abautomacao.com.br', telefone:'(11)97654-3210', produtos:[{nome:'Inversor de Frequência',qty:1,subtotal:2500}], total:2500, status:'em análise', ip:'192.168.1.15', datetime:'2025-06-13T16:00:00', lido:true });
+    }
+  }
+  seedDemo();
+
+  // Render stats
+  const msgs = DB.get('mensagens');
+  const orcs = DB.get('orcamentos');
+  const naoLidos = msgs.filter(m => !m.lido).length + orcs.filter(o => !o.lido).length;
+  const totalOrc = orcs.reduce((s, o) => s + (o.total || 0), 0);
+
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card"><div class="sc-label">Total de Mensagens</div><div class="sc-val">${msgs.length}</div></div>
+    <div class="stat-card"><div class="sc-label">Orçamentos</div><div class="sc-val">${orcs.length}</div></div>
+    <div class="stat-card"><div class="sc-label">Não Lidos</div><div class="sc-val" style="color:var(--accent)">${naoLidos}</div></div>
+    <div class="stat-card"><div class="sc-label">Volume Orçado</div><div class="sc-val" style="font-size:1.4rem;">R$ ${totalOrc.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div></div>
+  `;
+
+  // Tabela mensagens
+  document.getElementById('tbodyMsg').innerHTML = msgs.slice().reverse().map(m => `
+    <tr>
+      <td>${new Date(m.datetime).toLocaleString('pt-BR')}</td>
+      <td>${m.nome}</td>
+      <td>${m.email}</td>
+      <td>${m.assunto}</td>
+      <td><span class="badge ${m.lido ? 'badge-green' : 'badge-yellow'}">${m.lido ? 'Lido' : 'Novo'}</span></td>
+      <td style="font-family:monospace;font-size:.8rem;">${m.ip}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted);">Nenhuma mensagem</td></tr>';
+
+  // Tabela orçamentos
+  document.getElementById('tbodyOrc').innerHTML = orcs.slice().reverse().map(o => `
+    <tr>
+      <td>${new Date(o.datetime).toLocaleString('pt-BR')}</td>
+      <td>${o.empresa}</td>
+      <td>${o.email}</td>
+      <td>${o.produtos?.length || 0} produto(s)</td>
+      <td style="color:var(--accent);font-weight:700;">R$ ${(o.total||0).toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
+      <td><span class="badge ${o.status==='pendente'?'badge-yellow':o.status==='em análise'?'badge-red':'badge-green'}">${o.status||'pendente'}</span></td>
+    </tr>
+  `).join('') || '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted);">Nenhum orçamento</td></tr>';
+
+  initTabs('#tabsContainer');
+</script>
+</body>
+</html>

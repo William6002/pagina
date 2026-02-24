@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Conteúdo — TechSolv Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <a href="dashboard.html" class="logo" style="display:block;">TECH<span>SOLV</span></a>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html"><span>📊</span> Dashboard</a>
+      <a href="mensagens.html"><span>✉️</span> Mensagens</a>
+      <a href="orcamentos.html"><span>📋</span> Orçamentos</a>
+      <div class="sidebar-divider"></div>
+      <a href="produtos-admin.html"><span>📦</span> Produtos</a>
+      <a href="conteudo.html" class="active"><span>✏️</span> Conteúdo</a>
+      <div class="sidebar-divider"></div>
+      <a href="../index.html" target="_blank"><span>🌐</span> Ver Site</a>
+      <a href="#" onclick="logout()"><span>🔒</span> Sair</a>
+    </nav>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <div><h1>Editor de Conteúdo</h1><p>Edite os textos e informações exibidos no site.</p></div>
+    </div>
+
+    <div class="admin-tabs" id="tabsContainer">
+      <button class="tab-btn active" data-tab="tab-hero">Hero</button>
+      <button class="tab-btn" data-tab="tab-sobre">Sobre</button>
+      <button class="tab-btn" data-tab="tab-contato">Dados de Contato</button>
+    </div>
+
+    <!-- Hero -->
+    <div class="tab-content active" id="tab-hero">
+      <div class="form-card" style="max-width:none">
+        <h3 style="font-family:var(--font-head);margin-bottom:1.5rem;">Seção Hero (Página Inicial)</h3>
+        <div class="form-group">
+          <label>Tag superior</label>
+          <input type="text" id="heroTag" placeholder="Soluções para a indústria moderna"/>
+        </div>
+        <div class="form-group">
+          <label>Título principal</label>
+          <textarea id="heroTitulo" style="min-height:80px;" placeholder="Engenharia de precisão ao seu alcance."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Subtítulo / Descrição</label>
+          <textarea id="heroSub" style="min-height:100px;"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Texto Botão Primário</label>
+            <input type="text" id="heroBtnP" placeholder="Solicitar Orçamento"/>
+          </div>
+          <div class="form-group">
+            <label>Texto Botão Secundário</label>
+            <input type="text" id="heroBtnS" placeholder="Ver Produtos"/>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="saveSection('hero')">💾 Salvar Hero</button>
+        <div class="form-success" id="successHero" style="display:none;">✅ Salvo com sucesso!</div>
+      </div>
+    </div>
+
+    <!-- Sobre -->
+    <div class="tab-content" id="tab-sobre">
+      <div class="form-card" style="max-width:none">
+        <h3 style="font-family:var(--font-head);margin-bottom:1.5rem;">Seção Sobre</h3>
+        <div class="form-group">
+          <label>Título da seção</label>
+          <input type="text" id="sobreTitulo" placeholder="Mais de 18 anos construindo confiança."/>
+        </div>
+        <div class="form-group">
+          <label>Parágrafo descritivo</label>
+          <textarea id="sobreTexto" style="min-height:120px;"></textarea>
+        </div>
+        <h4 style="font-family:var(--font-head);margin-bottom:1rem;font-size:.95rem;">Diferenciais (cards)</h4>
+        <div id="diferenciaisContainer"></div>
+        <button class="btn-ghost" onclick="addDiferencial()" style="margin-bottom:1.5rem;font-size:.85rem;">+ Adicionar diferencial</button>
+        <br>
+        <button class="btn-primary" onclick="saveSection('sobre')">💾 Salvar Sobre</button>
+        <div class="form-success" id="successSobre" style="display:none;">✅ Salvo!</div>
+      </div>
+    </div>
+
+    <!-- Contato -->
+    <div class="tab-content" id="tab-contato">
+      <div class="form-card" style="max-width:none">
+        <h3 style="font-family:var(--font-head);margin-bottom:1.5rem;">Dados de Contato e Localização</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Endereço</label>
+            <textarea id="cEndereco" style="min-height:80px;"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Horário de Atendimento</label>
+            <textarea id="cHorario" style="min-height:80px;"></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Telefone/WhatsApp</label>
+            <input type="text" id="cTelefone"/>
+          </div>
+          <div class="form-group">
+            <label>E-mail Geral</label>
+            <input type="email" id="cEmail"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>URL do Mapa (Google Maps iframe src)</label>
+          <input type="url" id="cMapa" placeholder="https://maps.google.com/..."/>
+        </div>
+        <button class="btn-primary" onclick="saveSection('contato')">💾 Salvar Contato</button>
+        <div class="form-success" id="successContato" style="display:none;">✅ Salvo!</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="../js/main.js"></script>
+<script>
+  requireAuth();
+  initTabs('#tabsContainer');
+
+  const DEFAULTS = {
+    hero: { heroTag:'Soluções para a indústria moderna', heroTitulo:'Engenharia de precisão ao seu alcance.', heroSub:'Fornecemos equipamentos, componentes e serviços técnicos com qualidade certificada.', heroBtnP:'Solicitar Orçamento', heroBtnS:'Ver Produtos' },
+    sobre: { sobreTitulo:'Mais de 18 anos construindo confiança.', sobreTexto:'A TechSolv nasceu da visão de engenheiros apaixonados por qualidade...', diferenciais: [{icone:'⚙️',titulo:'Automação Industrial',desc:'Sistemas integrados de controle.'},{icone:'🔩',titulo:'Componentes',desc:'Peças de alta precisão.'},{icone:'📦',titulo:'Logística',desc:'Entrega rápida para todo o Brasil.'},{icone:'🛡️',titulo:'Garantia',desc:'Qualidade certificada.'}] },
+    contato: { cEndereco:'Av. Industrial, 2.450 — Bloco B\nDistrito Industrial · São Paulo, SP\nCEP 04794-000', cHorario:'Seg a Sex: 08h às 18h\nSáb: 08h às 13h', cTelefone:'(11) 3456-7890', cEmail:'contato@techsolv.com.br', cMapa:'' }
+  };
+
+  function loadSection(sec) {
+    const saved = DB.get('conteudo_' + sec);
+    const data = saved.length > 0 ? saved[0] : DEFAULTS[sec];
+    Object.entries(data).forEach(([k, v]) => {
+      const el = document.getElementById(k);
+      if (el) el.value = v;
+    });
+    if (sec === 'sobre' && data.diferenciais) {
+      renderDiferenciais(data.diferenciais);
+    }
+  }
+
+  function saveSection(sec) {
+    const inputs = {};
+    document.getElementById(`tab-${sec}`).querySelectorAll('input[id], textarea[id]').forEach(el => {
+      inputs[el.id] = el.value;
+    });
+    if (sec === 'sobre') inputs.diferenciais = getDiferenciais();
+    DB.set('conteudo_' + sec, [inputs]);
+    const el = document.getElementById('success' + sec.charAt(0).toUpperCase() + sec.slice(1));
+    if (el) { el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 3000); }
+  }
+
+  function renderDiferenciais(list) {
+    const c = document.getElementById('diferenciaisContainer');
+    c.innerHTML = '';
+    list.forEach((d, i) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:.75rem;';
+      div.innerHTML = `<div class="form-row"><div class="form-group"><label>Ícone</label><input type="text" class="d-icone" value="${d.icone}" style="font-size:1.1rem;"/></div><div class="form-group"><label>Título</label><input type="text" class="d-titulo" value="${d.titulo}"/></div></div><div class="form-group"><label>Descrição</label><input type="text" class="d-desc" value="${d.desc}"/></div><button type="button" onclick="this.parentElement.remove()" style="background:none;border:none;color:#e05050;cursor:pointer;font-size:.8rem;">🗑️ Remover</button>`;
+      c.appendChild(div);
+    });
+  }
+  function addDiferencial() {
+    renderDiferenciais([...getDiferenciais(), {icone:'🔧',titulo:'Novo Diferencial',desc:'Descrição...'}]);
+  }
+  function getDiferenciais() {
+    return Array.from(document.querySelectorAll('#diferenciaisContainer > div')).map(d => ({
+      icone: d.querySelector('.d-icone')?.value,
+      titulo: d.querySelector('.d-titulo')?.value,
+      desc: d.querySelector('.d-desc')?.value,
+    }));
+  }
+
+  loadSection('hero');
+  loadSection('sobre');
+  loadSection('contato');
+</script>
+</body>
+</html>

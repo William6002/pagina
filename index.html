@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechSolv — Soluções Industriais</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">TECH<span>SOLV</span></a>
+      <ul class="nav-links">
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#produtos">Produtos</a></li>
+        <li><a href="orcamento.html">Orçamento</a></li>
+        <li><a href="contato.html">Contato</a></li>
+        <li><a href="localizacao.html">Localização</a></li>
+        <li><a href="login.html" class="btn-admin">Área Admin</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-content">
+      <p class="hero-tag">Soluções para a indústria moderna</p>
+      <h1 class="hero-title">Engenharia <br><em>de precisão</em><br>ao seu alcance.</h1>
+      <p class="hero-sub">Fornecemos equipamentos, componentes e serviços técnicos com qualidade certificada e entrega garantida em todo o Brasil.</p>
+      <div class="hero-actions">
+        <a href="pages/orcamento.html" class="btn-primary">Solicitar Orçamento</a>
+        <a href="#produtos" class="btn-ghost">Ver Produtos</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card">
+        <div class="hc-line"></div>
+        <span class="hc-label">Projetos entregues</span>
+        <strong class="hc-num">+4.200</strong>
+      </div>
+      <div class="hero-card hc-alt">
+        <div class="hc-line"></div>
+        <span class="hc-label">Clientes ativos</span>
+        <strong class="hc-num">+800</strong>
+      </div>
+      <div class="hero-card">
+        <div class="hc-line"></div>
+        <span class="hc-label">Anos de mercado</span>
+        <strong class="hc-num">18</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE -->
+  <section class="sobre" id="sobre">
+    <div class="container">
+      <div class="sobre-text">
+        <p class="section-tag">Quem somos</p>
+        <h2>Mais de 18 anos<br>construindo confiança.</h2>
+        <p>A TechSolv nasceu da visão de engenheiros apaixonados por qualidade. Atuamos no fornecimento de equipamentos industriais, automação e serviços técnicos especializados, atendendo indústrias de todos os portes com dedicação e excelência.</p>
+        <a href="pages/contato.html" class="btn-primary">Entre em contato</a>
+      </div>
+      <div class="sobre-grid">
+        <div class="sg-item"><span class="sg-icon">⚙️</span><h4>Automação Industrial</h4><p>Sistemas integrados de controle e monitoramento.</p></div>
+        <div class="sg-item"><span class="sg-icon">🔩</span><h4>Componentes</h4><p>Peças técnicas de alta precisão e durabilidade.</p></div>
+        <div class="sg-item"><span class="sg-icon">📦</span><h4>Logística</h4><p>Entrega rápida e rastreável para todo o Brasil.</p></div>
+        <div class="sg-item"><span class="sg-icon">🛡️</span><h4>Garantia</h4><p>Qualidade certificada com suporte pós-venda.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUTOS -->
+  <section class="produtos" id="produtos">
+    <div class="container">
+      <p class="section-tag">Catálogo</p>
+      <h2>Nossos Produtos</h2>
+      <div class="produtos-grid" id="produtosGrid">
+        <!-- Renderizado via JS (produtos.js) -->
+      </div>
+      <div class="produtos-cta">
+        <a href="pages/orcamento.html" class="btn-primary">Solicitar Orçamento Personalizado</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO CTA -->
+  <section class="cta-band">
+    <div class="container">
+      <h2>Precisa de uma solução específica?</h2>
+      <p>Nossa equipe técnica está pronta para ajudar. Entre em contato agora.</p>
+      <a href="pages/contato.html" class="btn-primary">Falar com especialista</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">TECH<span>SOLV</span></a>
+        <p>Soluções industriais com excelência e precisão.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#produtos">Produtos</a></li>
+          <li><a href="pages/orcamento.html">Orçamento</a></li>
+          <li><a href="pages/contato.html">Contato</a></li>
+          <li><a href="pages/localizacao.html">Localização</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Contato</h4>
+        <p>📧 contato@techsolv.com.br</p>
+        <p>📞 (11) 3456-7890</p>
+        <p>📍 São Paulo, SP — Brasil</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 TechSolv. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="js/produtos.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

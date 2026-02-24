@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contato — TechSolv</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">TECH<span>SOLV</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html#sobre">Sobre</a></li>
+        <li><a href="index.html#produtos">Produtos</a></li>
+        <li><a href="orcamento.html">Orçamento</a></li>
+        <li><a href="contato.html" style="color:var(--accent)">Contato</a></li>
+        <li><a href="localizacao.html">Localização</a></li>
+        <li><a href="login.html" class="btn-admin">Área Admin</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <p class="section-tag">Fale conosco</p>
+    <h1>Entre em Contato</h1>
+    <p>Tire dúvidas, envie sugestões ou solicite informações técnicas. Nossa equipe responde em até 24h úteis.</p>
+  </div>
+
+  <section class="page-section">
+    <div class="container">
+      <div class="form-card">
+        <form id="formContato" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nome">Nome completo *</label>
+              <input type="text" id="nome" name="nome" required placeholder="João Silva"/>
+            </div>
+            <div class="form-group">
+              <label for="empresa">Empresa</label>
+              <input type="text" id="empresa" name="empresa" placeholder="Nome da empresa"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">E-mail *</label>
+              <input type="email" id="email" name="email" required placeholder="joao@email.com"/>
+            </div>
+            <div class="form-group">
+              <label for="telefone">Telefone</label>
+              <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="assunto">Assunto *</label>
+            <select id="assunto" name="assunto" required>
+              <option value="">Selecione um assunto...</option>
+              <option>Informações sobre produtos</option>
+              <option>Suporte técnico</option>
+              <option>Proposta comercial</option>
+              <option>Reclamação</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="mensagem">Mensagem *</label>
+            <textarea id="mensagem" name="mensagem" required placeholder="Descreva sua dúvida ou necessidade..."></textarea>
+          </div>
+
+          <!-- Upload -->
+          <div class="form-group">
+            <label>Anexar arquivos (opcional)</label>
+            <div class="upload-area" id="uploadArea">
+              <input type="file" id="anexos" name="anexos[]" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"/>
+              <span>📎 Clique ou arraste arquivos aqui<br><small style="font-size:.75rem;color:var(--text-muted);">Imagens, PDF, Word, Excel (máx. 10MB por arquivo)</small></span>
+            </div>
+            <div class="upload-preview" id="uploadPreview"></div>
+          </div>
+
+          <button type="submit" class="btn-primary form-submit">Enviar Mensagem →</button>
+          <div class="form-success" id="formSuccess">✅ Mensagem enviada com sucesso! Entraremos em contato em breve.</div>
+          <div class="form-error" id="formError">Preencha todos os campos obrigatórios.</div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-bottom"><p>© 2025 TechSolv. Todos os direitos reservados.</p></div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script>
+    initUpload('anexos', 'uploadPreview');
+
+    document.getElementById('formContato').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const form = this;
+      if (!validateForm(form)) {
+        document.getElementById('formError').style.display = 'block';
+        return;
+      }
+      document.getElementById('formError').style.display = 'none';
+
+      const info = await getClientInfo();
+      const data = {
+        id: Date.now(),
+        tipo: 'contato',
+        nome: form.nome.value,
+        empresa: form.empresa.value,
+        email: form.email.value,
+        telefone: form.telefone.value,
+        assunto: form.assunto.value,
+        mensagem: form.mensagem.value,
+        anexos: Array.from(document.getElementById('anexos').files).map(f => f.name),
+        ip: info.ip,
+        datetime: info.datetime,
+        lido: false
+      };
+
+      DB.push('mensagens', data);
+      document.getElementById('formSuccess').style.display = 'block';
+      form.reset();
+      document.getElementById('uploadPreview').innerHTML = '';
+    });
+  </script>
+</body>
+</html>

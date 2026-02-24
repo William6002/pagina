@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Admin — TechSolv</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+  <div class="login-wrapper">
+    <div style="position:fixed;inset:0;background-image:linear-gradient(rgba(232,160,32,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(232,160,32,.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;"></div>
+    <div class="login-card" style="position:relative;z-index:1;">
+      <a href="../index.html" class="logo" style="display:block;margin-bottom:2rem;">TECH<span>SOLV</span></a>
+      <h2>Área Administrativa</h2>
+      <p>Faça login para acessar o painel de controle.</p>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="usuario">Usuário</label>
+          <input type="text" id="usuario" name="usuario" required placeholder="admin"/>
+        </div>
+        <div class="form-group">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" name="senha" required placeholder="••••••••"/>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;padding:1rem;margin-top:.5rem;">Entrar →</button>
+        <div class="form-error" id="loginError" style="margin-top:1rem;">Usuário ou senha incorretos.</div>
+      </form>
+
+      <p style="margin-top:2rem;font-size:.78rem;color:var(--text-muted);text-align:center;">
+        ← <a href="../index.html" style="color:var(--accent)">Voltar ao site</a>
+      </p>
+      <p style="margin-top:.75rem;font-size:.72rem;color:var(--text-muted);text-align:center;background:var(--bg);padding:.5rem;border-radius:6px;">
+        Demo: usuário <code>admin</code> / senha <code>techsolv123</code>
+      </p>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    // Redireciona se já está logado
+    if (sessionStorage.getItem('adminUser')) {
+      window.location.href = 'dashboard.html';
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const user = this.usuario.value.trim();
+      const pass = this.senha.value;
+
+      // Credenciais demo — em produção usar backend seguro com hash
+      const ADMINS = [
+        { usuario: 'admin', senha: 'techsolv123', nome: 'Administrador', role: 'admin' },
+        { usuario: 'gerente', senha: 'gerente456', nome: 'Gerente', role: 'gerente' }
+      ];
+
+      const found = ADMINS.find(a => a.usuario === user && a.senha === pass);
+      if (found) {
+        sessionStorage.setItem('adminUser', JSON.stringify(found));
+        window.location.href = 'dashboard.html';
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

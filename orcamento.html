@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Orçamento — TechSolv</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css"/>
+  <!-- jsPDF para geração de PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-inner">
+      <a href="../index.html" class="logo">TECH<span>SOLV</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html#sobre">Sobre</a></li>
+        <li><a href="index.html#produtos">Produtos</a></li>
+        <li><a href="orcamento.html" style="color:var(--accent)">Orçamento</a></li>
+        <li><a href="contato.html">Contato</a></li>
+        <li><a href="localizacao.html">Localização</a></li>
+        <li><a href="login.html" class="btn-admin">Área Admin</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <p class="section-tag">Solicite agora</p>
+    <h1>Orçamento Personalizado</h1>
+    <p>Selecione os produtos desejados, informe suas necessidades e receba uma proposta rapidamente.</p>
+  </div>
+
+  <section class="page-section">
+    <div class="container">
+      <form id="formOrcamento" novalidate>
+
+        <!-- Dados do solicitante -->
+        <div class="form-card" style="margin-bottom:2rem">
+          <h3 style="font-family:var(--font-head);margin-bottom:1.5rem;font-size:1.1rem;">1. Dados do Solicitante</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nome">Nome completo *</label>
+              <input type="text" id="nome" name="nome" required placeholder="João Silva"/>
+            </div>
+            <div class="form-group">
+              <label for="empresa">Empresa *</label>
+              <input type="text" id="empresa" name="empresa" required placeholder="Nome da empresa"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">E-mail *</label>
+              <input type="email" id="email" name="email" required placeholder="joao@empresa.com"/>
+            </div>
+            <div class="form-group">
+              <label for="telefone">Telefone *</label>
+              <input type="tel" id="telefone" name="telefone" required placeholder="(11) 99999-9999"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="prazo">Prazo desejado para entrega</label>
+            <select id="prazo" name="prazo">
+              <option>Sem prazo definido</option>
+              <option>Até 1 semana</option>
+              <option>Até 15 dias</option>
+              <option>Até 30 dias</option>
+              <option>Até 60 dias</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Seleção de produtos -->
+        <div class="form-card" style="margin-bottom:2rem">
+          <h3 style="font-family:var(--font-head);margin-bottom:1.5rem;font-size:1.1rem;">2. Selecione os Produtos</h3>
+          <div class="produto-list" id="produtoSeletor"></div>
+          <div id="orcResumo" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-top:1rem;">
+            <h4 style="font-family:var(--font-head);margin-bottom:1rem;font-size:.95rem;">Resumo da Seleção</h4>
+            <div id="resumoLista"></div>
+            <div style="border-top:1px solid var(--border);margin-top:1rem;padding-top:1rem;display:flex;justify-content:space-between;align-items:center;">
+              <strong style="font-family:var(--font-head);">Total Estimado:</strong>
+              <strong style="font-family:var(--font-head);font-size:1.3rem;color:var(--accent);" id="totalEstimado">R$ 0,00</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Observações e arquivos -->
+        <div class="form-card" style="margin-bottom:2rem">
+          <h3 style="font-family:var(--font-head);margin-bottom:1.5rem;font-size:1.1rem;">3. Informações Adicionais</h3>
+          <div class="form-group">
+            <label for="observacoes">Observações / Especificações técnicas</label>
+            <textarea id="observacoes" name="observacoes" placeholder="Descreva detalhes técnicos, condições especiais ou qualquer informação relevante..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Anexar arquivos técnicos (opcional)</label>
+            <div class="upload-area">
+              <input type="file" id="arquivos" name="arquivos[]" multiple accept="image/*,.pdf,.doc,.docx,.dwg"/>
+              <span>📎 Plantas, especificações, desenhos técnicos<br><small style="color:var(--text-muted);font-size:.75rem;">PDF, imagens, DWG, Word</small></span>
+            </div>
+            <div class="upload-preview" id="uploadPreview"></div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <button type="submit" class="btn-primary" style="flex:1;padding:1rem">Enviar Solicitação →</button>
+          <button type="button" class="btn-ghost" id="btnPDF" style="padding:1rem 2rem">📄 Baixar PDF</button>
+        </div>
+        <div class="form-success" id="formSuccess">✅ Orçamento enviado! Nossa equipe entrará em contato em até 24h.</div>
+        <div class="form-error" id="formError">Preencha os campos obrigatórios e selecione ao menos 1 produto.</div>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-bottom"><p>© 2025 TechSolv. Todos os direitos reservados.</p></div>
+  </footer>
+
+  <script src="../js/produtos.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    // Renderiza seletor
+    renderProdutosSeletor('produtoSeletor');
+    initUpload('arquivos', 'uploadPreview');
+
+    // Atualiza resumo
+    window.updateOrcamentoResumo = function() {
+      const selecionados = [];
+      document.querySelectorAll('.produto-sel.selected').forEach(card => {
+        const id = parseInt(card.dataset.id);
+        const qty = parseInt(card.querySelector('.qty-input')?.value || 1);
+        const p = getProdutoById(id);
+        if (p) selecionados.push({ ...p, qty, subtotal: p.preco * qty });
+      });
+
+      const resumoEl = document.getElementById('orcResumo');
+      const listaEl = document.getElementById('resumoLista');
+      const totalEl = document.getElementById('totalEstimado');
+
+      if (selecionados.length === 0) {
+        resumoEl.style.display = 'none';
+        return;
+      }
+      resumoEl.style.display = 'block';
+
+      listaEl.innerHTML = selecionados.map(p => `
+        <div style="display:flex;justify-content:space-between;padding:.4rem 0;font-size:.875rem;border-bottom:1px solid rgba(31,42,60,.4);">
+          <span>${p.icone} ${p.nome} × ${p.qty}</span>
+          <span style="color:var(--accent)">R$ ${p.subtotal.toLocaleString('pt-BR',{minimumFractionDigits:2})}</span>
+        </div>
+      `).join('');
+
+      const total = selecionados.reduce((s, p) => s + p.subtotal, 0);
+      totalEl.textContent = 'R$ ' + total.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+    };
+
+    // Gera PDF
+    document.getElementById('btnPDF').addEventListener('click', () => {
+      const selecionados = [];
+      document.querySelectorAll('.produto-sel.selected').forEach(card => {
+        const id = parseInt(card.dataset.id);
+        const qty = parseInt(card.querySelector('.qty-input')?.value || 1);
+        const p = getProdutoById(id);
+        if (p) selecionados.push({ ...p, qty, subtotal: p.preco * qty });
+      });
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const now = new Date().toLocaleString('pt-BR');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(20);
+      doc.text('TechSolv — Solicitação de Orçamento', 14, 20);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(120);
+      doc.text(`Gerado em: ${now}`, 14, 28);
+
+      doc.setDrawColor(232, 160, 32);
+      doc.setLineWidth(0.5);
+      doc.line(14, 32, 196, 32);
+
+      // Dados solicitante
+      doc.setTextColor(0);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.text('Dados do Solicitante', 14, 42);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      const form = document.getElementById('formOrcamento');
+      doc.text(`Nome: ${form.nome.value || '-'}`, 14, 50);
+      doc.text(`Empresa: ${form.empresa.value || '-'}`, 14, 57);
+      doc.text(`E-mail: ${form.email.value || '-'}`, 14, 64);
+      doc.text(`Telefone: ${form.telefone.value || '-'}`, 14, 71);
+      doc.text(`Prazo: ${form.prazo.value}`, 14, 78);
+
+      doc.line(14, 83, 196, 83);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.text('Produtos Selecionados', 14, 92);
+
+      if (selecionados.length === 0) {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.text('Nenhum produto selecionado.', 14, 100);
+      } else {
+        // Cabeçalho tabela
+        let y = 100;
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.setFillColor(232, 160, 32);
+        doc.rect(14, y - 5, 182, 7, 'F');
+        doc.setTextColor(20);
+        doc.text('Produto', 16, y);
+        doc.text('Categoria', 95, y);
+        doc.text('Qtd', 130, y);
+        doc.text('Unit. (R$)', 148, y);
+        doc.text('Total (R$)', 172, y);
+        y += 7;
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(0);
+
+        let total = 0;
+        selecionados.forEach((p, i) => {
+          if (i % 2 === 0) { doc.setFillColor(245, 245, 250); doc.rect(14, y - 4, 182, 7, 'F'); }
+          doc.text(p.nome.substring(0, 30), 16, y);
+          doc.text(p.categoria, 95, y);
+          doc.text(String(p.qty), 130, y);
+          doc.text(p.preco.toLocaleString('pt-BR',{minimumFractionDigits:2}), 148, y);
+          doc.text(p.subtotal.toLocaleString('pt-BR',{minimumFractionDigits:2}), 172, y);
+          total += p.subtotal;
+          y += 8;
+        });
+
+        y += 4;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text(`Total Estimado: R$ ${total.toLocaleString('pt-BR',{minimumFractionDigits:2})}`, 14, y);
+        y += 10;
+
+        const obs = document.getElementById('observacoes').value;
+        if (obs) {
+          doc.line(14, y, 196, y); y += 8;
+          doc.setFontSize(10);
+          doc.text('Observações:', 14, y); y += 7;
+          doc.setFont('helvetica', 'normal');
+          const lines = doc.splitTextToSize(obs, 180);
+          doc.text(lines, 14, y);
+        }
+      }
+
+      doc.setFontSize(8);
+      doc.setTextColor(150);
+      doc.text('TechSolv — contato@techsolv.com.br — (11) 3456-7890', 14, 285);
+      doc.text('* Valores estimados sujeitos a confirmação.', 14, 290);
+
+      doc.save(`orcamento-techsolv-${Date.now()}.pdf`);
+    });
+
+    // Submit form
+    document.getElementById('formOrcamento').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const selecionados = [];
+      document.querySelectorAll('.produto-sel.selected').forEach(card => {
+        const id = parseInt(card.dataset.id);
+        const qty = parseInt(card.querySelector('.qty-input')?.value || 1);
+        const p = getProdutoById(id);
+        if (p) selecionados.push({ ...p, qty, subtotal: p.preco * qty });
+      });
+
+      if (!validateForm(this) || selecionados.length === 0) {
+        document.getElementById('formError').style.display = 'block';
+        return;
+      }
+      document.getElementById('formError').style.display = 'none';
+
+      const info = await getClientInfo();
+      const total = selecionados.reduce((s, p) => s + p.subtotal, 0);
+
+      DB.push('orcamentos', {
+        id: Date.now(),
+        tipo: 'orcamento',
+        nome: this.nome.value,
+        empresa: this.empresa.value,
+        email: this.email.value,
+        telefone: this.telefone.value,
+        prazo: this.prazo.value,
+        produtos: selecionados,
+        total,
+        observacoes: this.observacoes.value,
+        ip: info.ip,
+        datetime: info.datetime,
+        status: 'pendente',
+        lido: false
+      });
+
+      document.getElementById('formSuccess').style.display = 'block';
+      this.reset();
+      document.querySelectorAll('.produto-sel').forEach(c => c.classList.remove('selected'));
+      document.getElementById('orcResumo').style.display = 'none';
+      document.getElementById('uploadPreview').innerHTML = '';
+    });
+  </script>
+</body>
+</html>
